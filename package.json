@@ -12,6 +12,7 @@
   "devDependencies": {
     "@types/dotenv": "^6.1.1",
     "@types/express": "^5.0.3",
+    "@types/http-errors": "^2.0.5",
     "@types/mongoose": "^5.11.96",
     "@types/node": "^24.0.15",
     "mongoose": "^8.16.4",
@@ -39,6 +40,7 @@
     "glob-parent": "^5.1.2",
     "globals": "^16.3.0",
     "has-flag": "^3.0.0",
+    "http-errors": "^2.0.0",
     "ignore-by-default": "^1.0.1",
     "is-binary-path": "^2.1.0",
     "is-extglob": "^2.1.1",
