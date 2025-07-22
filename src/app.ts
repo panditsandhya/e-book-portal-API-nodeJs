@@ -1,6 +1,7 @@
 import express from "express";
 import createHttpError from "http-errors";
 import globalErrorHandler from "./middlewares/globalErrorHandler";
+import userRouter from "./user/userRouter";
 
 const app = express();
 
@@ -11,6 +12,9 @@ app.get("/", (req, res, next) => {
 
   res.json({ message: "Welcome to e-book apis" });
 });
+
+//user router
+app.use('/api/users', userRouter);
 
 //global error handler
 app.use(globalErrorHandler);
