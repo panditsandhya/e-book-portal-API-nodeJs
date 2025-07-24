@@ -178,4 +178,44 @@ const getSingleBook = async (
   }
 };
 
-export { createBook, updateBook, listBooks, getSingleBook };
+const deleteBook = async (req: Request, res: Response, next: NextFunction) => {
+  const bookId = req.params.bookId;
+
+  const book = await bookModel.findOne({ _id: bookId });
+  if (!book) {
+    return next(createHttpError(404, "Book not found"));
+  }
+
+  //check access
+  const _req = req as AuthRequest;
+  if (book.author.toString() !== _req.userId) {
+    return next(createHttpError(403, "You can not update others book."));
+  }
+
+  const coverFileSplits = book.coverImage.split("/");
+  const coverImagePublicId =
+    coverFileSplits[coverFileSplits.length - 2] +
+    "/" +
+    (coverFileSplits[coverFileSplits.length - 1]
+      ? coverFileSplits[coverFileSplits.length - 1].split(".")[
+          coverFileSplits[coverFileSplits.length - 1].split(".").length - 2
+        ]
+      : "");
+
+  const bookFileSplits = book.file.split("/");
+  const bookFilePublicId =
+    bookFileSplits[bookFileSplits.length - 2] +
+    "/" +
+    bookFileSplits[bookFileSplits.length - 1];
+
+  await cloudinary.uploader.destroy(coverImagePublicId);
+  await cloudinary.uploader.destroy(bookFilePublicId, {
+    resource_type: "raw",
+  });
+
+  await bookModel.deleteOne({_id: bookId});
+
+  return res.sendStatus(204);
+};
+
+export { createBook, updateBook, listBooks, getSingleBook, deleteBook };
